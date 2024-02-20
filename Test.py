@@ -22,7 +22,7 @@ class GridTest(unittest.TestCase):
 
         
     def test_run_grid_parallel(self):
-        with concurrent.futures.ThreadPoolExecutor() as executer:
+        with concurrent.futures.ThreadPoolExecutor(max_workers= len(self.inputs_list)) as executer:
             executer.map(self.init_tests, self.inputs_list)
 
 
@@ -34,7 +34,7 @@ class GridTest(unittest.TestCase):
         driver_instance.skip_cookies_popup_flow()
         driver_instance.search_flow("FC Barcelona")
         current_title = driver_instance.get_page_title()
-        print("test title change on: ", caps.capabilities)
+        print("test title change on: ", caps.capabilities['browserName'])
         self.assertIn('ברצלונה', current_title, "Title doesn't match expected value")
         driver_instance.close_page()
         
@@ -42,7 +42,7 @@ class GridTest(unittest.TestCase):
         driver_instance = Website_instance(self.HUB_URL,caps,self.WEBSITE_URL)
         driver_instance.skip_cookies_popup_flow()
         driver_instance.follow_team_flow("FC Barcelona")
-        print("test follow team on: ", caps.capabilities)
+        print("test follow team on: ", caps.capabilities['browserName'])
         follow_status = driver_instance.get_follow_status()
         self.assertEqual('עוקב', follow_status)
         driver_instance.close_page()
@@ -51,7 +51,7 @@ class GridTest(unittest.TestCase):
         driver_instance = Website_instance(self.HUB_URL,caps,self.WEBSITE_URL)
         driver_instance.skip_cookies_popup_flow()    
         driver_instance.change_to_kochkey_section_flow()
-        print("test change to hockey section on: ", caps.capabilities)
+        print("test change to hockey section on: ", caps.capabilities['browserName'])
         current_title = driver_instance.get_page_title()
         self.assertIn('הוקי', current_title, "Title doesn't match expected value")
         driver_instance.close_page()
@@ -61,7 +61,7 @@ class GridTest(unittest.TestCase):
         driver_instance.skip_cookies_popup_flow()
         driver_instance.follow_leumi_leage_from_homepage()
         driver_instance.search_flow("ליגה לאומית")
-        print("test follow leage from homepage on: ", caps.capabilities)
+        print("test follow leage from homepage on: ", caps.capabilities['browserName'])
         follow_status = driver_instance.get_follow_status()
         self.assertEqual('עוקב', follow_status)
         driver_instance.close_page()
@@ -71,6 +71,7 @@ class GridTest(unittest.TestCase):
         driver_instance = Website_instance(self.HUB_URL,caps,self.WEBSITE_URL)
         driver_instance.skip_cookies_popup_flow()
         old_theme_class, new_theme_class = driver_instance.change_theme_flow()
+        print("test change them on: ", caps.capabilities['browserName'])
         self.assertNotEqual(old_theme_class,new_theme_class)
         driver_instance.close_page()
 

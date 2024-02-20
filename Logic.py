@@ -67,7 +67,6 @@ class Website_instance(Browser_instance):
 
     def click_follow_button(self):
         self.follow_button_element.click()
-        print(self.follow_button_element.get_attribute('class'))
 
 
     def click_leumi_leage_star_button(self):
@@ -115,7 +114,7 @@ class Website_instance(Browser_instance):
         self.wait_until_title_change(old_title)
 
     def follow_leumi_leage_from_homepage(self):
-        time.sleep(2)
+        time.sleep(3)
         self.init_leumi_leage_star_button()
         self.click_leumi_leage_star_button()
         time.sleep(0.5)
