@@ -18,6 +18,8 @@ class Website_instance(Browser_instance):
     hokey_section_button_xpath = "//div[@class='main-header-module-desktop-item '][contains(text(),'הוקי')]"
     fottbal_section_button_xpath = "//div[@class='main-header-module-desktop-item '][contains(text(),'כדורגל')]"
     follow_button_xpath = "//div[@class='mega-header-module-entity-follow-container']/div/div"
+    leumi_leage_star_xpath = "//a[@class='all-scores-widget-competition_all_scores_widget_competition_info_name__8bE-h'][contains(text(),'ליגה לאומית')]//preceding-sibling::div"
+    Change_theme_switch_xpath = "//div[@class='settings-module-row-container '][contains(text(),'הגדר רקע כהה')]/div/div"
 
     def __init__(self, HUB, cap, website):        
         super().__init__(HUB,cap,website)
@@ -32,9 +34,17 @@ class Website_instance(Browser_instance):
     def init_follow_button(self):
         self.follow_button_element = self.wait_and_get_element_by_xpath(self.follow_button_xpath)
 
-
     def init_hokey_section_button(self):
         self.hokey_section_button_element = self.wait_and_get_element_by_xpath(self.hokey_section_button_xpath)
+
+    def init_leumi_leage_star_button(self):
+        self.leumi_leage_star_button_element = self.wait_and_get_element_by_xpath(self.leumi_leage_star_xpath)
+
+    def init_setting_button(self):
+        self.setting_button_element = self.wait_and_get_element_by_xpath(self.setting_icon_xpath)
+
+    def init_Change_theme_switch(self):
+        self.Change_theme_switch_element = self.wait_and_get_element_by_xpath(self.Change_theme_switch_xpath)
 
 
     def wait_until_title_change(self,old_title,sec = 3.0,steps = 0.25):
@@ -57,6 +67,17 @@ class Website_instance(Browser_instance):
 
     def click_follow_button(self):
         self.follow_button_element.click()
+        print(self.follow_button_element.get_attribute('class'))
+
+
+    def click_leumi_leage_star_button(self):
+        self.leumi_leage_star_button_element.click()
+
+    def click_setting_button(self):
+        self.setting_button_element.click()
+
+    def click_Change_theme_switch_element(self):
+        self.Change_theme_switch_element.click()
 
     def skip_cookies_popup_flow(self):
         self.init_coockies_button_element()
@@ -83,6 +104,7 @@ class Website_instance(Browser_instance):
 
 
     def get_follow_status(self):
+        self.init_follow_button()
         return self.follow_button_element.text
     
 
@@ -91,6 +113,26 @@ class Website_instance(Browser_instance):
         old_title = self.get_page_title()
         self.hokey_section_button_element.click()
         self.wait_until_title_change(old_title)
+
+    def follow_leumi_leage_from_homepage(self):
+        time.sleep(2)
+        self.init_leumi_leage_star_button()
+        self.click_leumi_leage_star_button()
+        time.sleep(0.5)
+
+    def change_theme_flow(self):
+        time.sleep(1)
+        self.init_setting_button()
+        self.click_setting_button()
+        self.init_Change_theme_switch()
+        time.sleep(1)
+        current_settings = self.get_theme_status()
+        self.click_Change_theme_switch_element()
+        time.sleep(1)
+        return (current_settings,self.get_theme_status())
+
+    def get_theme_status(self):
+        return self.Change_theme_switch_element.get_attribute("class")
 
 
 
