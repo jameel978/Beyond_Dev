@@ -5,14 +5,13 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time
 
-class start_browser:
-    def __init__(self, website):
-        self.start_driver(website)
+class Browser_instance:
+    def __init__(self, HUB,cap,website):
+        self.start_driver(HUB,cap,website)
         
-    def start_driver(self,website):
-        driver = webdriver.Chrome()
-        driver.get(website)
-        self.driver = driver
+    def start_driver(self,HUB,cap,website):
+        self.driver = webdriver.Remote(command_executor=HUB,options=cap)
+        self.driver.get(website)
         
     def get_page_title(self):
         return self.driver.title
@@ -23,10 +22,10 @@ class start_browser:
     def get_element_by_xpath(self,xpath):
         return self.driver.find_element(By.XPATH,xpath)
 
-    def wait_and_get_element_by_xpath(self,xpath,sec=2):
+    def wait_and_get_element_by_xpath(self,xpath,sec=5):
         return WebDriverWait(self.driver, sec).until(EC.presence_of_element_located((By.XPATH, xpath)) )
 
-    def wait_and_get_elements_by_xpath(self,xpath,sec=2):
+    def wait_and_get_elements_by_xpath(self,xpath,sec=5):
         return WebDriverWait(self.driver, sec).until(EC.presence_of_all_elements_located((By.XPATH, xpath)) )
 
 

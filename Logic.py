@@ -4,12 +4,13 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import concurrent.futures
-
 import time
 import unittest
+from infra import Browser_instance
 
 
-class test_login(unittest.TestCase):
+
+class Website_instance(Browser_instance):
     HUB_URL = "http://192.168.112.221:4444/wd/hub"
     cookies_button = '//button[@id="didomi-notice-agree-button"]'
     seach_input = "//input[@class='main-header-module-desktop-search-input']"
@@ -18,45 +19,49 @@ class test_login(unittest.TestCase):
     fottbal_section_button = "//div[@class='main-header-module-desktop-item '][contains(text(),'כדורגל')]"
     follow_button = "//div[@class='mega-header-module-entity-follow-container']/div/div"
 
-    def setUp(self):
-        self.chrome_cap = webdriver.ChromeOptions()
-        self.chrome_cap.capabilities['platformName'] = "Windows 11"
-        self.firefox_cap = webdriver.FirefoxOptions()
-        self.firefox_cap.capabilities['platformName'] = "Windows 11"
-        self.edge_cap = webdriver.EdgeOptions()
-        self.edge_cap.capabilities['platformName'] =  "Windows 11" 
-        self.caps_list = [self.chrome_cap,self.firefox_cap,self.edge_cap] 
-        #self.caps_list = [self.chrome_cap] 
+    def __init__(self, HUB, cap, website):        
+        super().__init__(HUB,cap,website)
+        self.current_title = None
 
-        #return super().setUp()
-    def test_run_grid_parallel(self):
-        with concurrent.futures.ThreadPoolExecutor(max_workers=len(self.cap_list)) as executer:
-            executer.map(self.test_run_grid, self.caps_list)
+    def init_coockies_button_element(self):
+        self.cookies_button_element = self.wait_and_get_element_by_xpath(self.cookies_button)
 
+    def init_search_element(self):
+        self.search_input = self.wait_and_get_element_by_xpath(self.seach_input)
+
+    def wait_until_title_change(self,old_title,sec = 3.0,steps = 0.25):
+        current_title = self.get_page_title()
+        c_sec = sec
+        while((current_title == old_title) & (c_sec > 0.0)):
+            time.sleep(steps)
+            c_sec -= steps
+            current_title = self.get_page_title()
+            #print(current_title,old_title,c_sec)
     
-    def test_run_grid(self):
-        for caps in self.caps_list:
-            self.search_test(caps)
-            
-    def wait_and_get_element_by_xpath(driver,xpath,sec=2):
-        return WebDriverWait(driver, sec).until(EC.presence_of_element_located((By.XPATH, xpath)) )
+    def add_text_search_input_one_by_one(self,txt):
+        for i in txt:
+            self.search_input.send_keys(i)
+            time.sleep(0.1)
 
-    
-    def search_test(self,cap):
-        driver = webdriver.Remote(command_executor=self.HUB_URL,options=cap)
-        driver.get("https://www.365scores.com/he")
-        cookies_button_element = self.wait_and_get_element_by_xpath(driver,self.cookies_button,sec=4)
-        cookies_button_element.click()
-        search_input_element = self.wait_and_get_element_by_xpath(driver,self.seach_input)
-        search_input_element.send_keys("fc barcelona")
+
+    def click_coockies_button(self):
+        self.cookies_button_element.click()
+
+    def skip_cookies_popup_flow(self):
+        self.init_coockies_button_element()
+        self.click_coockies_button()
+        time.sleep(0.5)
+
+    def search_flow(self,txt):
+        self.init_search_element()
+        self.add_text_search_input_one_by_one(txt)
+        old_title = self.get_page_title()
         time.sleep(1)
-        search_input_element.send_keys(Keys.RETURN)
-        time.sleep(1)
-        current_title = self.driver.title
-        self.assertIn("ברצלונה",current_title)
-        driver.close()
+        self.send_return_key_to_search_input()
+        self.wait_until_title_change(old_title)
 
-
+    def send_return_key_to_search_input(self):
+        self.search_input.send_keys(Keys.RETURN)
 
 
 if __name__ == "__main__":
