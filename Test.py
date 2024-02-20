@@ -17,18 +17,18 @@ class GridTest(unittest.TestCase):
         self.edge_cap = webdriver.EdgeOptions()
         self.edge_cap.capabilities['platformName'] = 'Windows 11'
         self.cap_list = [self.chrome_cap, self.fireFox_cap, self.edge_cap]
+        self.test_functions = [self.title_change,self.follow_team,self.change_to_hockey_section,self.follow_leage_from_homepage,self.change_theme]
+        self.inputs_list = [(test,browser) for test in self.test_functions for browser in self.cap_list]
 
-
-    #def test_run_grid_serial(self):
-    #    self.title_change(self.cap_list[0])
-
-
+        
     def test_run_grid_parallel(self):
-        with concurrent.futures.ThreadPoolExecutor(max_workers=len(self.cap_list)) as executer:
-            executer.map(self.change_theme, self.cap_list)
+        with concurrent.futures.ThreadPoolExecutor() as executer:
+            executer.map(self.init_tests, self.inputs_list)
 
 
-
+    def init_tests(self,input):
+        input[0](input[1])
+        
     def title_change(self, caps):
         driver_instance = Website_instance(self.HUB_URL,caps,self.WEBSITE_URL)
         driver_instance.skip_cookies_popup_flow()
