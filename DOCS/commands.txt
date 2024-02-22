@@ -1,0 +1,20 @@
+adb shell dumpsys activity | findstr mFocusedApp
+
+adb shell am start -n 
+
+adb shell screencap /sdcard/screenshot.png
+
+adb pull /sdcard/screenshot.png
+
+
+#com.google.android.calculator/com.android.calculator2.Calculator
+
+{
+  "platformName": "Android",
+  "deviceName": "emulator-5554",
+  "platformVersion": "14.0",
+  "automationName": "UiAutomator2",
+  "appPackage": "com.google.android.calculator",
+  "appActivity": "com.android.calculator2.Calculator"
+}
+
