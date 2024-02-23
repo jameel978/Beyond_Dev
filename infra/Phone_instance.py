@@ -14,7 +14,10 @@ capabilities = dict(
     platformVersion= "14.0",
     automationName= "UiAutomator2",
     appPackage= "com.claudivan.taskagenda",
-    appActivity= ".Activities.MainActivity"
+    appActivity= ".Activities.MainActivity",
+    autoGrantPermissions= "true",
+    autoAcceptAlerts= "true"
+
 )
 
 appium_server_url = 'http://localhost:4723'
@@ -35,11 +38,17 @@ class Phoneinstance:
             self.driver.quit()
 
     def find_elem_by_ID(self,elem,sec = 3):
-        #return self.driver.find_element(by=AppiumBy.ID, value=elem)
-        print(elem)
         return WebDriverWait(self.driver, sec).until(EC.presence_of_element_located((AppiumBy.ID, elem)))
 
     def find_elem_by_XPATH(self,elem,sec = 3):
-        #return self.driver.find_element(by=AppiumBy.ID, value=elem)
-        print(elem)
         return WebDriverWait(self.driver, sec).until(EC.presence_of_element_located((AppiumBy.XPATH, elem)))
+
+    def find_elem_by_ID_and_click(self,elem,sec = 3):
+        WebDriverWait(self.driver, sec).until(EC.presence_of_element_located((AppiumBy.ID, elem))).click()
+
+    def find_elem_by_XPATH_and_click(self,elem,sec = 3):
+        WebDriverWait(self.driver, sec).until(EC.presence_of_element_located((AppiumBy.XPATH, elem))).click()
+
+    def find_elem_by_ID_and_sendkeys(self,elem,keys,sec = 3):
+        WebDriverWait(self.driver, sec).until(EC.presence_of_element_located((AppiumBy.ID, elem))).send_keys(keys)
+
