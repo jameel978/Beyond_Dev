@@ -33,9 +33,9 @@ class Phoneinstance:
             options=capabilities_options
         )
 
-    def tearDown(self) -> None:
-        if self.driver:
-            self.driver.quit()
+    #def tearDown(self) -> None:
+    #    if self.driver:
+    #        self.driver.quit()
 
     def find_elem_by_ID(self,elem,sec = 3):
         return WebDriverWait(self.driver, sec).until(EC.presence_of_element_located((AppiumBy.ID, elem)))

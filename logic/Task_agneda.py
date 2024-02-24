@@ -99,7 +99,11 @@ class TaskAgenda(Phoneinstance):
         return self.find_elem_by_ID(self.CURRENT_EVENT_NAME).text
     
     def get_current_event_date(self):
-        self.find_elem_by_ID_and_click(self.CURRENT_EVENTS)
+        try:
+            self.find_elem_by_ID_and_click(self.HAMBURGER_MENU)
+            self.find_elem_by_ID_and_click(self.ALL_EVENTS_BUTTON)
+        except:
+            pass
         self.find_elem_by_XPATH_and_click(self.CURRENT_ADDED_EVENT)
         return self.find_elem_by_XPATH(self.CURRENT_EVENT_DATE).text[5:]
 
@@ -130,9 +134,10 @@ class TaskAgenda(Phoneinstance):
         delta_months = (date2.year - date1.year) * 12 + date2.month - date1.month
         for i in range(delta_months):
             self.find_elem_by_ID_and_click(self.RIGHT_ARROW)
-        self.find_elem_by_XPATH_and_click(self.CALENDAR_DAY + date2.strftime('%m"]'))
+        self.find_elem_by_XPATH_and_click(self.CALENDAR_DAY + date2.strftime('%d"]'))
         self.find_elem_by_ID_and_click(self.ADD_TASK)
         self.add_name_to_task(name)
+
 
     def navigate_back(self):
         self.find_elem_by_XPATH_and_click(self.NAVIGATE_BACK)

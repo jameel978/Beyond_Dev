@@ -39,27 +39,27 @@ class TestAppium(unittest.TestCase):
         Current_taskagenda_app = TaskAgenda()
         Current_taskagenda_app.create_new_task_from_homepage_using_add_sign("beyond_dev",day='Tomorrow')
         Current_taskagenda_app.click_save_button()
-        Result = Current_taskagenda_app.get_current_event_date()
+        Result = Current_taskagenda_app.get_current_event_date_from_hamburger_menu()
         Expected_result = (datetime.now()+timedelta(days=1)).strftime('%d %h %Y')
         self.assertEqual(Result,Expected_result,"EVENT DATE IS NOT CORRECT")
 
     def test_added_task_date_customdate(self):
         Current_taskagenda_app = TaskAgenda()
-        Current_taskagenda_app.select_date_from_month_stock_view_finder("beyond_dev",day='Other')
-        Current_taskagenda_app.select_date_from_month_view_finder('1 Jan 2025')
+        Current_taskagenda_app.create_new_task_from_homepage_using_add_sign("beyond_dev",day='Other')
+        Current_taskagenda_app.select_date_from_month_stock_view_finder('1 Jan 2025')
         Current_taskagenda_app.add_name_to_task("Next Year TASK")
         Current_taskagenda_app.click_save_button()
-        Result = Current_taskagenda_app.get_current_event_date()
+        Result = Current_taskagenda_app.get_current_event_date_from_hamburger_menu()
         Expected_result = "1 Jan 2025"
         self.assertEqual(Result,Expected_result,"EVENT DATE IS NOT CORRECT")
 
-    def test_added_task_date_custom_data(self):
+    def test_adding_a_task_from_calendar_tab(self):
         Current_taskagenda_app = TaskAgenda()
-        Current_taskagenda_app.create_new_task_from_homepage_using_add_sign("Beyond Dev",day='Today')
+        Current_taskagenda_app.create_new_task_from_homepage_using_calendar_tab("Beyond Dev",date='4 Jan 2025')
         Current_taskagenda_app.click_save_button()
-        Result = Current_taskagenda_app.change_event_name("Test")
-        Expected_result = "Test"
-        self.assertEqual(Result, Expected_result, "EVENT NAME IS NOT CORRECT")
+        Result = Current_taskagenda_app.get_current_event_date()
+        Expected_result = "4 Jan 2025"
+        self.assertEqual(Result,Expected_result,"EVENT DATE IS NOT CORRECT")
 
     def test_mark_task_as_completed(self):
         Current_taskagenda_app = TaskAgenda()
