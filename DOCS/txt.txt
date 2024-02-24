@@ -4,5 +4,7 @@
   "platformVersion": "14.0",
   "automationName": "UiAutomator2",
   "appPackage": "com.claudivan.taskagenda",
-  "appActivity": ".Activities.MainActivity"
+  "appActivity": ".Activities.MainActivity",
+  "autoGrantPermissions": "true",
+  "autoAcceptAlerts": "true"
 }

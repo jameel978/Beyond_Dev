@@ -28,9 +28,16 @@ class TaskAgenda(Phoneinstance):
 
     #NEW event page
     EVENT_NAME_INPUT = 'com.claudivan.taskagenda:id/etTitulo'
-    TIME_NAME_INPU = 'com.claudivan.taskagenda:id/btHora'
-    DESCRRIPTION_INPU = 'com.claudivan.taskagenda:id/etDescricao'
+    TIME_NAME_INPUT = 'com.claudivan.taskagenda:id/btHora'
+    DESCRRIPTION_INPUT = 'com.claudivan.taskagenda:id/etDescricao'
     SAVE_BUTTON = 'com.claudivan.taskagenda:id/item_salvar'
+    EDIT_BUTTON = 'com.claudivan.taskagenda:id/item_editar'
+    DELETE_BUTTON = 'com.claudivan.taskagenda:id/item_excluir'
+    CONFIRM_DELETE_BUTTON = 'android:id/button1'
+    CLEAR_NAME_BUTTON = 'com.claudivan.taskagenda:id/btApagarTitulo'
+    CURRENT_TASK_CHECKBOX = 'com.claudivan.taskagenda:id/cbEventoConcluido'
+
+
 
     #AFTER ADDING EVENTS
     CURRENT_EVENTS = "com.claudivan.taskagenda:id/btEventosSemana"
@@ -70,17 +77,20 @@ class TaskAgenda(Phoneinstance):
     def add_name_to_task(self,name):
         self.find_elem_by_ID_and_sendkeys(self.EVENT_NAME_INPUT, name)
     def add_discription_to_task(self,disc):
-        self.find_elem_by_ID_and_sendkeys(self.DESCRRIPTION_INPU, disc)
+        self.find_elem_by_ID_and_sendkeys(self.DESCRRIPTION_INPUT, disc)
 
     def click_save_button(self):
         self.find_elem_by_ID_and_click(self.SAVE_BUTTON)
 
     def check_if_event_is_added(self):
         try:
-            if self.find_elem_by_ID(self.CURRENT_EVENTS).text == "1 PENDING EVENT":
-                return True
-            else:
-                return False
+            self.find_elem_by_ID_and_click(self.HAMBURGER_MENU)
+            self.find_elem_by_ID_and_click(self.ALL_EVENTS_BUTTON)
+        except:
+            pass
+        try:
+            self.find_elem_by_XPATH(self.CURRENT_ADDED_EVENT)
+            return True
         except:
             return  False
         
@@ -126,3 +136,32 @@ class TaskAgenda(Phoneinstance):
 
     def navigate_back(self):
         self.find_elem_by_XPATH_and_click(self.NAVIGATE_BACK)
+
+
+    def change_event_name(self,name):
+        self.find_elem_by_ID_and_click(self.HAMBURGER_MENU)
+        self.find_elem_by_ID_and_click(self.ALL_EVENTS_BUTTON)
+        self.find_elem_by_XPATH_and_click(self.CURRENT_ADDED_EVENT)
+        self.find_elem_by_ID_and_click(self.EDIT_BUTTON)
+        self.find_elem_by_ID_and_click(self.CLEAR_NAME_BUTTON)
+        self.add_name_to_task(name)
+        self.click_save_button()
+        self.navigate_back()
+        return self.find_elem_by_ID(self.CURRENT_EVENT_NAME).text
+
+
+    def mark_event_as_complete(self):
+        self.find_elem_by_ID_and_click(self.HAMBURGER_MENU)
+        self.find_elem_by_ID_and_click(self.ALL_EVENTS_BUTTON)
+        self.find_elem_by_ID_and_click(self.CURRENT_TASK_CHECKBOX)
+
+    def check_if_event_is_complete(self):
+        self.find_elem_by_XPATH_and_click(self.CURRENT_ADDED_EVENT)
+        return self.find_elem_by_ID(self.CURRENT_TASK_CHECKBOX).get_attribute("checked")
+
+    def delete_added_event(self):
+        self.find_elem_by_ID_and_click(self.HAMBURGER_MENU)
+        self.find_elem_by_ID_and_click(self.ALL_EVENTS_BUTTON)
+        self.find_elem_by_XPATH_and_click(self.CURRENT_ADDED_EVENT)
+        self.find_elem_by_ID_and_click(self.DELETE_BUTTON)
+        self.find_elem_by_ID_and_click(self.CONFIRM_DELETE_BUTTON)

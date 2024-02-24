@@ -43,7 +43,7 @@ class TestAppium(unittest.TestCase):
         Expected_result = (datetime.now()+timedelta(days=1)).strftime('%d %h %Y')
         self.assertEqual(Result,Expected_result,"EVENT DATE IS NOT CORRECT")
 
-    def test_added_task_date_custom_data(self):
+    def test_added_task_date_customdate(self):
         Current_taskagenda_app = TaskAgenda()
         Current_taskagenda_app.select_date_from_month_stock_view_finder("beyond_dev",day='Other')
         Current_taskagenda_app.select_date_from_month_view_finder('1 Jan 2025')
@@ -55,12 +55,28 @@ class TestAppium(unittest.TestCase):
 
     def test_added_task_date_custom_data(self):
         Current_taskagenda_app = TaskAgenda()
-        Current_taskagenda_app.create_new_task_from_homepage_using_calendar_tab("Next Year TASK",'1 Jan 2025')
+        Current_taskagenda_app.create_new_task_from_homepage_using_add_sign("Beyond Dev",day='Today')
         Current_taskagenda_app.click_save_button()
-        Current_taskagenda_app.navigate_back()
-        Result = Current_taskagenda_app.get_current_event_date_from_hamburger_menu()
-        Expected_result = "1 Jan 2025"
-        self.assertEqual(Result,Expected_result,"EVENT DATE IS NOT CORRECT")
+        Result = Current_taskagenda_app.change_event_name("Test")
+        Expected_result = "Test"
+        self.assertEqual(Result, Expected_result, "EVENT NAME IS NOT CORRECT")
+
+    def test_mark_task_as_completed(self):
+        Current_taskagenda_app = TaskAgenda()
+        Current_taskagenda_app.create_new_task_from_homepage_using_add_sign("Beyond Dev",day='Today')
+        Current_taskagenda_app.click_save_button()
+        Current_taskagenda_app.mark_event_as_complete()
+        Result = Current_taskagenda_app.check_if_event_is_complete()
+        Expected_result = "true"
+        self.assertEqual(Result, Expected_result, "EVENT NAME IS NOT MARKED AS COMPLETE")
+
+    def test_deleting_an_event(self):
+        Current_taskagenda_app = TaskAgenda()
+        Current_taskagenda_app.create_new_task_from_homepage_using_add_sign("Beyond Dev",day='Today')
+        Current_taskagenda_app.click_save_button()
+        Current_taskagenda_app.delete_added_event()
+        Result = Current_taskagenda_app.check_if_event_is_added()
+        self.assertFalse(Result,"EVENT WAS NOT DELETED")
 
 
 if __name__ == '__main__':
