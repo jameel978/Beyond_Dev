@@ -1,9 +1,8 @@
-from infra.Phone_instance import Phoneinstance
+from Infra.Phone_instance import Phoneinstance
 from datetime import datetime, timedelta
 
 
 class TaskAgenda(Phoneinstance):
-
     #Homepage elements
     ADD_TASK = "com.claudivan.taskagenda:id/btNovoEvento"
     HAMBURGER_MENU = "com.claudivan.taskagenda:id/hamburguer"
@@ -37,8 +36,6 @@ class TaskAgenda(Phoneinstance):
     CLEAR_NAME_BUTTON = 'com.claudivan.taskagenda:id/btApagarTitulo'
     CURRENT_TASK_CHECKBOX = 'com.claudivan.taskagenda:id/cbEventoConcluido'
 
-
-
     #AFTER ADDING EVENTS
     CURRENT_EVENTS = "com.claudivan.taskagenda:id/btEventosSemana"
     CURRENT_ADDED_EVENT = '//android.widget.ListView[@resource-id="com.claudivan.taskagenda:id/lvListaEventos"]/android.widget.FrameLayout/android.widget.RelativeLayout'
@@ -66,16 +63,16 @@ class TaskAgenda(Phoneinstance):
         super().__init__()
 
 
-
     def create_new_task_from_homepage_using_add_sign(self,name ='' ,day='Today'):
         self.find_elem_by_ID_and_click(self.ADD_TASK)
         self.find_elem_by_XPATH_and_click(self.SELECT_DAY_BUTTON_XPATH + '"' + day + '"]')
         if day!="Other":
             self.add_name_to_task(name)
 
-
     def add_name_to_task(self,name):
         self.find_elem_by_ID_and_sendkeys(self.EVENT_NAME_INPUT, name)
+        self.click_save_button()
+        
     def add_discription_to_task(self,disc):
         self.find_elem_by_ID_and_sendkeys(self.DESCRRIPTION_INPUT, disc)
 
@@ -137,6 +134,7 @@ class TaskAgenda(Phoneinstance):
         self.find_elem_by_XPATH_and_click(self.CALENDAR_DAY + date2.strftime('%d"]'))
         self.find_elem_by_ID_and_click(self.ADD_TASK)
         self.add_name_to_task(name)
+        self.click_save_button()
 
 
     def navigate_back(self):
@@ -160,9 +158,11 @@ class TaskAgenda(Phoneinstance):
         self.find_elem_by_ID_and_click(self.ALL_EVENTS_BUTTON)
         self.find_elem_by_ID_and_click(self.CURRENT_TASK_CHECKBOX)
 
+
     def check_if_event_is_complete(self):
         self.find_elem_by_XPATH_and_click(self.CURRENT_ADDED_EVENT)
         return self.find_elem_by_ID(self.CURRENT_TASK_CHECKBOX).get_attribute("checked")
+
 
     def delete_added_event(self):
         self.find_elem_by_ID_and_click(self.HAMBURGER_MENU)
